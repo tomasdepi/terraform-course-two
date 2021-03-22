@@ -11,15 +11,23 @@ terraform {
 provider "docker" {}
 
 resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:slim-v10"
+  name = "nodered/node-red:latest-minimal"
+}
+
+resource "random_string" "random" {
+  count   = var.container_count
+  length  = 4
+  special = false
+  upper   = false
 }
 
 resource "docker_container" "nodered_container" {
-  name  = "nodered"
+  count = var.container_count
+  name  = join("-", ["nodered", random_string.random[count.index].result])
   image = docker_image.nodered_image.latest
 
   ports {
-    internal = 1880
-    external = 1880
+    internal = var.int_port
+    external = var.ext_port + count.index
   }
 }
