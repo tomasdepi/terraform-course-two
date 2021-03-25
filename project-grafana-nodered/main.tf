@@ -11,18 +11,18 @@ locals {
 }
 
 module "images" {
-  source     = "./modules/image"
-  
-  for_each = local.deployments
+  source = "./modules/image"
+
+  for_each   = local.deployments
   image_name = each.value.image
 }
 
 module "container" {
-  source     = "./modules/container"
+  source = "./modules/container"
 
-  name_in = "nodered-${terraform.workspace}"
-  image_in = module.images["nodered"].image_name
-  int_port_in = var.int_port
-  ext_port_in = var.ext_port
+  name_in           = "nodered-${terraform.workspace}"
+  image_in          = module.images["nodered"].image_name
+  int_port_in       = var.int_port
+  ext_port_in       = var.ext_port
   container_path_in = var.container_path
 }

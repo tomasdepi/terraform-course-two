@@ -10,14 +10,14 @@ resource "docker_container" "container" {
   }
 
   volumes {
-      container_path = var.container_path_in
-      volume_name = docker_volume.volume.name
+    container_path = var.container_path_in
+    volume_name    = docker_volume.volume.name
   }
 }
 
 resource "docker_volume" "volume" {
-    name = "${var.name_in}-volume"
-    lifecycle {
-        prevent_destroy = false
-    }
+  name = "${var.name_in}-volume"
+  lifecycle {
+    prevent_destroy = false
+  }
 }

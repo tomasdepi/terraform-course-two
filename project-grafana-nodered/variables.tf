@@ -8,7 +8,7 @@ variable "image_names" {
       prod = "nodered/node-red:latest-minimal"
     }
     influxdb = {
-      dev = "quay.io/influxdb/influxdb:v2.0.2"
+      dev  = "quay.io/influxdb/influxdb:v2.0.2"
       prod = "quay.io/influxdb/influxdb:v2.0.2"
     }
   }
@@ -40,11 +40,11 @@ variable "int_port" {
 }
 
 variable "container_path" {
-  type = string
+  type    = string
   default = "/data"
 }
 
 variable "host_path" {
-  type = string
+  type    = string
   default = ""
 }
