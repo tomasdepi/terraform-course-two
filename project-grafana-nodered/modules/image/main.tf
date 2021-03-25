@@ -1,4 +1,4 @@
 
-resource "docker_image" "nodered_image" {
+resource "docker_image" "image" {
   name = var.image_name
 }
