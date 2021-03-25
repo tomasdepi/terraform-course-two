@@ -1,8 +1,6 @@
 
-output "container_name" {
-  value = module.container.container_name
-}
-
-output "ip_address" {
-  value = module.container.ip_address
+output "application_access" {
+  value = [
+    for x in module.container[*] : x
+  ]
 }
