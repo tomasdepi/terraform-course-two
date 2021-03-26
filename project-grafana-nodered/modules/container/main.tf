@@ -17,17 +17,30 @@ resource "docker_container" "container" {
     external = var.ext_port_in[count.index]
   }
 
-  volumes {
-    container_path = var.container_path_in
-    volume_name    = docker_volume.volume[count.index].name
+  dynamic "volumes" {
+    for_each = var.volumes_in
+
+    content {
+      container_path = volumes.value.container_path_each
+      volume_name    = module.volume[count.index].volume_output[volumes.key]
+    }
+
+  }
+
+  provisioner "local-exec" {
+    command    = "echo '${self.name}: ${self.ip_address}:${self.ports[0].external}' >> ${path.cwd}/containers.txt"
+    on_failure = continue
+  }
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "rm ${path.cwd}/containers.txt"
+    on_failure = continue
   }
 }
 
-resource "docker_volume" "volume" {
-  count = var.count_in
-
-  name = "${var.name_in}-volume-${terraform.workspace}-${random_string.random[count.index].result}"
-  lifecycle {
-    prevent_destroy = false
-  }
+module "volume" {
+  source       = "../volume"
+  count        = var.count_in
+  volume_count = length(var.volumes_in)
+  volume_name  = "${var.name_in}-${terraform.workspace}-${random_string.random[count.index].result}-volume"
 }
