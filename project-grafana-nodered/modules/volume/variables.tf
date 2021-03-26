@@ -1,8 +1,8 @@
 
 variable "volume_count" {
-    type = number
+  type = number
 }
 
 variable "volume_name" {
-    type = string
+  type = string
 }
