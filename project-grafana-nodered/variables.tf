@@ -11,6 +11,10 @@ variable "image_names" {
       dev  = "quay.io/influxdb/influxdb:v2.0.2"
       prod = "quay.io/influxdb/influxdb:v2.0.2"
     }
+    grafana = {
+      dev  = "grafana/grafana"
+      prod = "grafana/grafana"
+    }
   }
 }
 
@@ -29,6 +33,10 @@ variable "ext_port" {
     influxdb = {
       dev  = [8186]
       prod = [8086, 8087]
+    }
+    grafana = {
+      dev  = [3100]
+      prod = [3000, 3001]
     }
   }
 
