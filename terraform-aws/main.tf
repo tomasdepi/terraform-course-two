@@ -59,3 +59,9 @@ module "database" {
   db_subnet_group_name   = module.vpc.db_subnet_group_name[0]
   vpc_security_group_ids = [module.vpc.db_security_group]
 }
+
+module "loadbalancing" {
+  source = "./loadbalancing"
+  public_subnets = module.vpc.public_subnet_ids
+  public_sg = module.vpc.public_security_group
+}
