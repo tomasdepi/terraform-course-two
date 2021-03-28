@@ -32,6 +32,12 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
+resource "aws_route_table_association" "public_assoc" {
+  count = var.public_subnet_count
+  subnet_id = aws_subnet.public_subnet[count.index].id
+  route_table_id = aws_route_table.public_rt.id
+}
+
 resource "aws_subnet" "private_subnet" {
   count = var.private_subnet_count
 
@@ -43,5 +49,35 @@ resource "aws_subnet" "private_subnet" {
 
   tags = {
     Name = "private_subnet-${count.index + 1}"
+  }
+}
+
+resource "aws_internet_gateway" "main_internet_gateway" {
+  vpc_id = aws_vpc.main_vpc.id
+  
+  tags = {
+    Name = "main_igw"
+  }
+}
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.main_vpc.id
+  
+  tags = {
+    Name = "public_route_table"
+  }
+}
+
+resource "aws_route" "default_route" {
+  route_table_id = aws_route_table.public_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.main_internet_gateway.id
+}
+
+resource "aws_default_route_table" "private_rt" {
+  default_route_table_id = aws_vpc.main_vpc.default_route_table_id
+
+  tags = {
+    Name = "private_route_table"
   }
 }
