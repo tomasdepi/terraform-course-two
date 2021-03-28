@@ -19,7 +19,7 @@ locals {
         }
       }
     }
-    private = {
+    rds = {
       name = "rds_sg"
       ingress = {
         sql = {
@@ -44,4 +44,18 @@ module "vpc" {
   access_ip            = var.access_ip
   security_groups      = local.security_groups
   db_subnet_group      = true
+}
+
+module "database" {
+  source                 = "./database"
+  db_storage             = 10
+  db_engine_version      = "5.7.22"
+  db_instance_class      = "db.t2.micro"
+  db_name                = var.db_name
+  db_user                = var.db_user
+  db_password            = var.db_password
+  db_identifier          = "my-db"
+  skip_final_snapshot    = true
+  db_subnet_group_name   = module.vpc.db_subnet_group_name[0]
+  vpc_security_group_ids = [module.vpc.db_security_group]
 }
