@@ -1,6 +1,36 @@
 
 locals {
   vpc_cidr = "10.0.0.0/16"
+  security_groups = {
+    public = {
+      name = "public_sg"
+      ingress = {
+        ssh = {
+          from_port   = 22
+          to_port     = 22
+          protocol    = "tcp"
+          cidr_blocks = [var.access_ip]
+        }
+        http = {
+          from_port   = 80
+          to_port     = 80
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      }
+    }
+    private = {
+      name = "rds_sg"
+      ingress = {
+        sql = {
+          from_port   = 3306
+          to_port     = 3306
+          protocol    = "tcp"
+          cidr_blocks = [local.vpc_cidr]
+        }
+      }
+    }
+  }
 }
 
 module "vpc" {
@@ -11,4 +41,6 @@ module "vpc" {
   private_subnet_count = 3
   public_cidrs         = [for i in range(2, 255, 2) : cidrsubnet(local.vpc_cidr, 8, i)]
   private_cidrs        = [for i in range(1, 255, 2) : cidrsubnet(local.vpc_cidr, 8, i)]
+  access_ip            = var.access_ip
+  security_groups      = local.security_groups
 }

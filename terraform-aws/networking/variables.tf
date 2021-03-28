@@ -18,3 +18,11 @@ variable "public_subnet_count" {
 variable "private_subnet_count" {
   type = number
 }
+
+variable "access_ip" {
+  type = string
+}
+
+variable "security_groups" {
+  type = map(any)
+}

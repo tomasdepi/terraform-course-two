@@ -85,3 +85,27 @@ resource "aws_default_route_table" "private_rt" {
     Name = "private_route_table"
   }
 }
+
+resource "aws_security_group" "public_sg" {
+  for_each = var.security_groups
+  name     = each.value.name
+  vpc_id   = aws_vpc.main_vpc.id
+
+  dynamic "ingress" {
+    for_each = each.value.ingress
+
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+    }
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
