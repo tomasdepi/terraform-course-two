@@ -11,6 +11,10 @@ resource "aws_vpc" "main_vpc" {
   tags = {
     Name = "main-vpc"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "random_shuffle" "az_list" {
@@ -33,8 +37,8 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_route_table_association" "public_assoc" {
-  count = var.public_subnet_count
-  subnet_id = aws_subnet.public_subnet[count.index].id
+  count          = var.public_subnet_count
+  subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_rt.id
 }
 
@@ -54,7 +58,7 @@ resource "aws_subnet" "private_subnet" {
 
 resource "aws_internet_gateway" "main_internet_gateway" {
   vpc_id = aws_vpc.main_vpc.id
-  
+
   tags = {
     Name = "main_igw"
   }
@@ -62,16 +66,16 @@ resource "aws_internet_gateway" "main_internet_gateway" {
 
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main_vpc.id
-  
+
   tags = {
     Name = "public_route_table"
   }
 }
 
 resource "aws_route" "default_route" {
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id         = aws_route_table.public_rt.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id = aws_internet_gateway.main_internet_gateway.id
+  gateway_id             = aws_internet_gateway.main_internet_gateway.id
 }
 
 resource "aws_default_route_table" "private_rt" {
