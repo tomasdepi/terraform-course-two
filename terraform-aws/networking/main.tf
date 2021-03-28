@@ -109,3 +109,13 @@ resource "aws_security_group" "public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_db_subnet_group" "rds_subnet_group" {
+  count      = var.db_subnet_group ? 1 : 0
+  name       = "rds_subnet_group"
+  subnet_ids = aws_subnet.private_subnet[*].id
+
+  tags = {
+    Name = "RDS subnet group"
+  }
+}

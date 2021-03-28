@@ -43,4 +43,5 @@ module "vpc" {
   private_cidrs        = [for i in range(1, 255, 2) : cidrsubnet(local.vpc_cidr, 8, i)]
   access_ip            = var.access_ip
   security_groups      = local.security_groups
+  db_subnet_group      = true
 }
