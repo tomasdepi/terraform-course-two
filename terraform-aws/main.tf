@@ -61,7 +61,16 @@ module "database" {
 }
 
 module "loadbalancing" {
-  source = "./loadbalancing"
-  public_subnets = module.vpc.public_subnet_ids
-  public_sg = module.vpc.public_security_group
+  source                = "./loadbalancing"
+  public_subnets        = module.vpc.public_subnet_ids
+  public_sg             = module.vpc.public_security_group
+  tg_port               = 80
+  tg_protocol           = "HTTP"
+  vpc_id                = module.vpc.vpc_id
+  lb_healthy_treshold   = 2
+  lb_unhealthy_treshold = 2
+  lb_timeout            = 3
+  lb_interval           = 30
+  listener_port         = 80
+  listener_protocol     = "HTTP"
 }
