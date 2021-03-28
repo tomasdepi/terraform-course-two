@@ -86,7 +86,7 @@ resource "aws_default_route_table" "private_rt" {
   }
 }
 
-resource "aws_security_group" "public_sg" {
+resource "aws_security_group" "security_groups" {
   for_each = var.security_groups
   name     = each.value.name
   vpc_id   = aws_vpc.main_vpc.id
