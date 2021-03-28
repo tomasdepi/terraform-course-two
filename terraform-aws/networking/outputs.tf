@@ -10,3 +10,11 @@ output "db_subnet_group_name" {
 output "db_security_group" {
   value = aws_security_group.security_groups["rds"].id
 }
+
+output "public_subnet_ids" {
+  value = aws_subnet.public_subnet[*].id
+}
+
+output "public_security_group" {
+  value = aws_security_group.security_groups["public"].id
+}
