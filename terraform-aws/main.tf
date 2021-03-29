@@ -74,3 +74,14 @@ module "loadbalancing" {
   listener_port         = 80
   listener_protocol     = "HTTP"
 }
+
+module "compute" {
+  source          = "./compute"
+  instance_count  = 1
+  instance_type   = "t3.micro"
+  volume_size     = 10
+  public_sg       = module.vpc.public_security_group
+  public_subnets  = module.vpc.public_subnet_ids
+  key_name        = "depi_key"
+  public_key_path = "/home/depi/.ssh/id_rsa_tdepietro.pub"
+}
