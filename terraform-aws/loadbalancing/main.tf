@@ -18,6 +18,11 @@ resource "aws_lb_target_group" "tg" {
     timeout             = var.lb_timeout
     interval            = var.lb_interval
   }
+
+  lifecycle {
+      ignore_changes = [name]
+      create_before_destroy = true
+  }
 }
 
 resource "aws_lb_listener" "lb_listener" {
