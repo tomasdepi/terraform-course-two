@@ -83,5 +83,10 @@ module "compute" {
   public_sg       = module.vpc.public_security_group
   public_subnets  = module.vpc.public_subnet_ids
   key_name        = "depi_key"
-  public_key_path = "/home/depi/.ssh/id_rsa_tdepietro.pub"
+  public_key_path = "/home/psh/.ssh/id_rsa_tdepietro.pub"
+  user_data_path  = "${path.root}/userdata.tpl"
+  db_user = var.db_user
+  db_pass = var.db_password
+  db_endpoint = module.database.db_endpoint
+  db_name = var.db_name
 }
