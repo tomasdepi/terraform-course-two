@@ -31,7 +31,14 @@ resource "aws_instance" "node" {
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [var.public_sg]
   subnet_id              = var.public_subnets[count.index]
-  #user_data = ""
+  user_data = templatefile(var.user_data_path,
+    {
+      nodename    = "node-${random_id.node_id[count.index].dec}"
+      dbuser      = var.db_user
+      dbpass      = var.db_pass
+      db_endpoint = var.db_endpoint
+      dbname      = var.db_name
+  })
   root_block_device {
     volume_size = var.volume_size
   }
