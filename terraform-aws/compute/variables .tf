@@ -26,3 +26,23 @@ variable "key_name" {
 variable "public_key_path" {
   type = string
 }
+
+variable "user_data_path" {
+  type = string
+}
+
+variable "db_user" {
+  type = string
+}
+variable "db_pass" {
+  type      = string
+  sensitive = true
+}
+
+variable "db_endpoint" {
+  type = string
+}
+
+variable "db_name" {
+  type = string
+}
