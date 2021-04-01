@@ -5,10 +5,10 @@ locals {
     public = {
       name = "public_sg"
       ingress = {
-        ssh = {
-          from_port   = 22
-          to_port     = 22
-          protocol    = "tcp"
+        open = {
+          from_port   = 0
+          to_port     = 0
+          protocol    = "-1"
           cidr_blocks = [var.access_ip]
         }
         http = {
@@ -83,13 +83,14 @@ module "loadbalancing" {
 
 module "compute" {
   source              = "./compute"
-  instance_count      = 2
+  instance_count      = 1
   instance_type       = "t3.medium"
   volume_size         = 10
   public_sg           = module.vpc.public_security_group
   public_subnets      = module.vpc.public_subnet_ids
   key_name            = "depi_key"
   public_key_path     = "/home/psh/.ssh/id_rsa_tdepietro.pub"
+  private_key_path    = "/home/psh/.ssh/id_rsa_tdepietro"
   user_data_path      = "${path.root}/userdata.tpl"
   db_user             = var.db_user
   db_pass             = var.db_password
