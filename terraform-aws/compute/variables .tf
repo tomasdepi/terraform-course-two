@@ -46,3 +46,11 @@ variable "db_endpoint" {
 variable "db_name" {
   type = string
 }
+
+variable "lb_target_group_arn" {
+  type = string
+}
+
+variable "target_group_port" {
+  type = number
+}

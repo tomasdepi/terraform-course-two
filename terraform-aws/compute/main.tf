@@ -47,3 +47,11 @@ resource "aws_instance" "node" {
     Name = "node-${random_id.node_id[count.index].dec}"
   }
 }
+
+resource "aws_lb_target_group_attachment" "node_attach" {
+  count = var.instance_count
+
+  target_group_arn = var.lb_target_group_arn
+  target_id        = aws_instance.node[count.index].id
+  port             = var.target_group_port
+}
