@@ -17,6 +17,12 @@ locals {
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
         }
+        nginx = {
+          from_port   = 8000
+          to_port     = 8000
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
       }
     }
     rds = {
@@ -64,7 +70,7 @@ module "loadbalancing" {
   source                = "./loadbalancing"
   public_subnets        = module.vpc.public_subnet_ids
   public_sg             = module.vpc.public_security_group
-  tg_port               = 80
+  tg_port               = 8000
   tg_protocol           = "HTTP"
   vpc_id                = module.vpc.vpc_id
   lb_healthy_treshold   = 2
@@ -76,17 +82,19 @@ module "loadbalancing" {
 }
 
 module "compute" {
-  source          = "./compute"
-  instance_count  = 1
-  instance_type   = "t3.micro"
-  volume_size     = 10
-  public_sg       = module.vpc.public_security_group
-  public_subnets  = module.vpc.public_subnet_ids
-  key_name        = "depi_key"
-  public_key_path = "/home/psh/.ssh/id_rsa_tdepietro.pub"
-  user_data_path  = "${path.root}/userdata.tpl"
-  db_user = var.db_user
-  db_pass = var.db_password
-  db_endpoint = module.database.db_endpoint
-  db_name = var.db_name
+  source              = "./compute"
+  instance_count      = 2
+  instance_type       = "t3.medium"
+  volume_size         = 10
+  public_sg           = module.vpc.public_security_group
+  public_subnets      = module.vpc.public_subnet_ids
+  key_name            = "depi_key"
+  public_key_path     = "/home/psh/.ssh/id_rsa_tdepietro.pub"
+  user_data_path      = "${path.root}/userdata.tpl"
+  db_user             = var.db_user
+  db_pass             = var.db_password
+  db_endpoint         = module.database.db_endpoint
+  db_name             = var.db_name
+  lb_target_group_arn = module.loadbalancing.lb_target_group_arn
+  target_group_port   = 8000
 }
