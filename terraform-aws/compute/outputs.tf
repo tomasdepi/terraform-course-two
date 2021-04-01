@@ -5,5 +5,5 @@ output "instance" {
 }
 
 output "target_group_port" {
-    value = var.target_group_port
+  value = var.target_group_port
 }
