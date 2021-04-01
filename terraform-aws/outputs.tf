@@ -9,3 +9,8 @@ output "instances" {
   }
   sensitive = true
 }
+
+output "kubeconfig_file" {
+  value     = module.compute.kubeconfig_files
+  sensitive = true
+}
